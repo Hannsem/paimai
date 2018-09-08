@@ -1,0 +1,4 @@
+@extends('layouts.Template')
+@section('content')
+    1231231231
+    @endsection

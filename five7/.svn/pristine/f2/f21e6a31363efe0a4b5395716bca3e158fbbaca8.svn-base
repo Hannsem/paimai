@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers\Shop;
+
+use App\Http\Model\Shop\admin_shops;
+use App\Http\Model\Shop\shops_auction;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+class CommodityDetails extends Controller
+{
+    public function index(){
+        $admin_shops=new admin_shops();
+        $shops_auction=new shops_auction();
+        $getmessagr=$shops_auction->getMessage(request('sid'));
+        $details=($admin_shops->getShopid(request('sid')))[0];
+        $uid=request()->session()->get('user');
+        $isdeposit=$shops_auction->isDeposit($uid,request('sid'));
+        return view('Shop.CommodityDetails',compact('details','getmessagr','isdeposit'));
+    }
+
+    public function deposit(){
+        return 1;
+    }
+}

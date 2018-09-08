@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Model\Admin;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class admin_shops extends Model
+{
+    protected $table="admin_shops";
+    public $timestamps=false;
+
+    /**商品添加方法
+     * 韩金权
+     * @param $data
+     * @return bool
+     */
+    function updata($data,$path){
+            $data=[
+                'name'=>$data['name'],
+                'money'=>$data['money'],
+                'imgs'=>$path,
+                'type'=>$data['type'],
+                'number'=>$data['number'],
+                'details'=>$data['details']
+            ];
+        $lang=DB::table('admin_shops')->insert($data);
+        if ($lang){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    /**分页获取商品
+     * 韩金权
+     * @param $page
+     * @param $limit
+     * @return array
+     */
+    function getData($page,$limit){
+        $count=count(admin_shops::get());
+        $getData=admin_shops::offset(($page-1)*$limit)->limit($limit)->get();
+        $data=[$count,$getData];
+        return $data;
+    }
+}

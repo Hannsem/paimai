@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Model\Shop;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class shops_auction extends Model
+{
+    protected $table = "shops_auction";
+    public $timestamps = false;
+    public function getMessage($sid){
+       return DB::table('shops_auction')
+            ->join('shop_login', 'shops_auction.uid', '=', 'shop_login.id')
+            ->where('sid',$sid)
+            ->select('shop_login.name', 'shops_auction.money')
+           ->orderby('shops_auction.money','asc')
+            ->get();
+//           return shops_auction::leftjoin('shop_login as sl','shops_auction.uid = sl.id')->where('sid',$sid)->get();
+    }
+
+    public function isDeposit($uid,$sid){
+        return shops_auction::where(['uid'=>$uid,'sid'=>$sid])->count();
+    }
+}

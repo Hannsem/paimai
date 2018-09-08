@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+/**
+ * 后台登录 类
+ * 龙云飞 18-8-24 16：28
+ * Class Login
+ * @package App\Http\Controllers\Admin
+ */
+class Login extends Controller
+{
+    /**
+     * 登录页面渲染
+     * 龙云飞 18-8-24 16：30
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\think\response\View
+     */
+    public function index()
+    {
+        return view("Admin.Login");
+    }
+}

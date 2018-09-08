@@ -1,0 +1,4 @@
+@extends('layouts.Template')
+@section('content')
+    <a href="{{route('adminLogin')}}">test</a>
+    @endsection

@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Http\Model\Shop;
+
+use Illuminate\Database\Eloquent\Model;
+
+class admin_shops extends Model
+{
+    protected $table = "admin_shops";
+    public $timestamps = false;
+
+    public function getShop(){
+        return admin_shops::all();
+    }
+    public function getShopid($id){
+        return admin_shops::where('id',$id)->get();
+    }
+
+}

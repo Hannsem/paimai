@@ -1,0 +1,40 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Model\Admin\admin_login;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+
+/**
+ * 后台登录 类
+ * 龙云飞 18-8-24 16：28
+ * Class Login
+ * @package App\Http\Controllers\Admin
+ */
+class Login extends Controller
+{
+    /**
+     * 登录页面渲染
+     * 龙云飞 18-8-24 16：30
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|\think\response\View
+     */
+    public function index()
+    {
+        $data=admin_login::get();
+        echo $data;
+//        exit;
+        return view("Admin.Login");
+    }
+
+
+    public function verifyLogin()
+    {
+        $userName=request('username');
+        $passWord=md5(request('password'));
+        $data=admin_login::all();
+        dump($data['username']);
+
+    }
+}

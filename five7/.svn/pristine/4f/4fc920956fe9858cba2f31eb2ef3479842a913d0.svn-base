@@ -1,0 +1,113 @@
+@extends('layouts.shopHome')
+@section('header')
+    <h1 class="mui-title">主页</h1>
+@endsection
+@section('content')
+    {{--//轮播--}}
+    <div id="slider" class="mui-slider topSlider">
+        <div class="mui-slider-group mui-slider-loop">
+            <!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+            <div class="mui-slider-item mui-slider-item-duplicate">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+            <!-- 第一张 -->
+            <div class="mui-slider-item">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+            <!-- 第二张 -->
+            <div class="mui-slider-item">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+            <!-- 第三张 -->
+            <div class="mui-slider-item">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+            <!-- 第四张 -->
+            <div class="mui-slider-item">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+            <!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+            <div class="mui-slider-item mui-slider-item-duplicate">
+                <a href="#">
+                    <img src="http://placehold.it/400x300">
+                </a>
+            </div>
+        </div>
+        <div class="mui-slider-indicator">
+            <div class="mui-indicator mui-active"></div>
+            <div class="mui-indicator"></div>
+            <div class="mui-indicator"></div>
+            <div class="mui-indicator"></div>
+        </div>
+    </div>
+    {{--//菜单--}}
+            <div id="sliderSegmentedControl"
+                 class="mui-scroll-wrapper mui-slider-indicator mui-segmented-control mui-segmented-control-inverted">
+                <div class="mui-scroll">
+                    <a class="mui-control-item mui-active">
+                        推荐
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                    <a class="mui-control-item">
+                        热点
+                    </a>
+                </div>
+            </div>
+{{--概览--}}
+    <ul class="mui-table-view mui-grid-view">
+        <li class="mui-table-view-cell mui-media mui-col-xs-6">
+            <a href="#">
+                <img class="mui-media-object" src="http://placehold.it/400x300">
+                <div class="mui-media-body" style="word-break:break-all; height: 30px;white-space: normal;margin-bottom: 10px;text-indent: 1em">文字说明1文字说明1文字说明1文字说明1文字说明1文字说明1文字说明1</div>
+                <div class="mui-media-body" style="text-align: left;float: left;width: 50%">￥12333333</div>
+                <div class="mui-media-body"style="text-align: right;float: right;width: 50%;white-space: normal;"><p>2333人付款</p></div>
+            </a>
+        </li>
+    </ul>
+
+    <script type="text/javascript">
+        var gallery = mui('.topSlider');
+        gallery.slider({
+            interval:5000//自动轮播周期，若为0则不自动播放，默认为0；
+        });
+    </script>
+@endsection
+@section('nav')
+    <a class="mui-tab-item mui-active" hp-href="{{route('five7Home')}}" >
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">首页</span>
+    </a>
+    <a class="mui-tab-item" hp-href="{{route('five7Personal')}}">
+        <span class="mui-icon mui-icon-phone"></span>
+        <span class="mui-tab-label">个人中心</span>
+    </a>
+    <script type="text/javascript">
+
+
+    </script>
+@endsection
+

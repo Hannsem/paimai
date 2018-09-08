@@ -1,0 +1,151 @@
+@extends('layouts.default')
+@section('content')
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>商品详情</legend>
+    </fieldset>
+
+    <div class="demoTable">
+        搜索：
+        <div class="layui-inline">
+            <select class="layui-input" id="user" name="user">
+                <option value="">请选择搜索依据</option>
+                <option value="id">ID</option>
+                <option value="name">商品名称</option>
+                <option value="deposit">押金</option>
+                <option value="minmoney">最小加价</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input class="layui-input" name="data" id="demoReload" autocomplete="off">
+        </div>
+        <button class="layui-btn" id="searchShop" data-type="reload">搜索</button>
+    </div>
+
+    <table class="layui-hide" id="LAY_table_user" lay-filter="user"></table>
+    <div id="Layer1" style="display:none;position:absolute;z-index:1;"></div>
+
+    <script>
+        $(function () {
+            layui.use('table', function () {
+                var table = layui.table;
+
+                table.render({
+                    elem: '#LAY_table_user'
+                    , url: '{{route('getCommodityDetails')}}'
+                    , height: 471
+                    , cols: [[
+                        {type: 'checkbox', fixed: 'left'}
+                        , {field: 'id', title: 'id', sort: true, fixed: 'left'}
+                        , {
+                            field: 'imgs',
+                            title: '商品图片',
+                            width: 150,
+                            templet: '<div><img style="max-height: 30px;max-width: 30px;border-radius: 50px" src="@{{d.imgs}}" ' +
+                                'onmouseout="hiddenPic();"onmousemove="showPic(event,this.src);"></div>'
+                        }
+                        , {field: 'name', title: '商品名称'}
+                        , {field: 'money', title: '商品价格'}
+                        , {field: 'type', title: '商品类型'}
+                        , {field: 'deposit', title: '押金'}
+                        , {field: 'minmoney', title: '最小加价'}
+                        , {field: 'endtime', title: '结束时间'}
+                        , {
+                            title: '操作',
+                            width: 140,
+                            templet: "<div><button onclick='editShop(@{{ d.id }})' class='layui-btn layui-btn-sm editShop' >编辑</button> <button onclick='deleteShop(@{{ d.id }})' class='layui-btn layui-btn-sm layui-btn-danger deleteShop' style='float:right'>删除</button></div>"
+                        }
+                    ]]
+                    , id: 'testReload'
+                    , page: true
+                });
+                var $ = layui.$, active = {
+                    reload: function () {
+                        var demoReload = $('#demoReload');
+                        var user = $("#user option:selected");
+                        //执行重载
+                        table.reload('testReload', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            , where: {
+                                key: {
+                                    id: demoReload.val(),
+                                    user: user.val()
+                                }
+                            }
+                        });
+                    }
+                };
+
+                $('.demoTable .layui-btn').on('click', function () {
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+            });
+
+
+        })
+
+        function editShop(id) {
+            window.location.href = "{{route('editCommodityDetails')}}?id=" + id
+        }
+
+        /**
+         * 删除商品
+         * 龙云飞
+         * @param id
+         */
+
+        function deleteShop(id) {
+            layer.confirm("是否确认删除",
+                {
+                    btn: ['确定', '取消']
+                }, function () {
+                    $.ajax({
+                        headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                        url: '{{route("CommodityDelete")}}',
+                        method: 'delete',
+                        type: "post",
+                        data: {
+                            shopid: id
+                        }, success: function (data) {
+                            if (data == 1) {
+                                layer.msg('删除成功', {
+                                    time: 1500,
+                                });
+                                setTimeout(function () {
+                                    window.location.reload();
+                                }, 1500)
+                            }
+                        }, erro: function (data) {
+                            layer.alert(data)
+                        }
+
+                    })
+                }, function () {
+
+                })
+
+
+        }
+
+        //  鼠标指向图片出现预览图      韩金权
+        function showPic(e, sUrl) {
+            var x, y;
+            x = e.clientX;
+            y = e.clientY;
+            document.getElementById("Layer1").style.left = x + 2 + 'px';
+            document.getElementById("Layer1").style.top = y + 2 + 'px';
+            document.getElementById("Layer1").innerHTML = "<img style='border-radius: 50px' border='5' width='80' height='80' src=\"" + sUrl + "\">";
+            document.getElementById("Layer1").style.display = "";
+        }
+
+        function hiddenPic() {
+            document.getElementById("Layer1").innerHTML = "";
+            document.getElementById("Layer1").style.display = "none";
+        }
+
+    </script>
+
+@endsection

@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Model\Shop;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class shops_auction extends Model
+{
+    protected $table = "shops_auction";
+    public $timestamps = false;
+
+    /**
+     *
+     * 获取商品出价的用户
+     * @param $sid
+     * @return mixed
+     */
+    public function getMessage($sid){
+       return DB::table('shops_auction')
+            ->join('shop_login', 'shops_auction.uid', '=', 'shop_login.id')
+            ->where('sid',$sid)
+           ->where('money','>',0)
+            ->select('shop_login.name', 'shops_auction.money')
+            ->orderby('shops_auction.money','desc')
+            ->get();
+//           return shops_auction::leftjoin('shop_login as sl','shops_auction.uid = sl.id')->where('sid',$sid)->get();
+    }
+
+
+    /**
+     *
+     * 获取该用户是否缴纳商品的押金
+     * @param $uid
+     * @param $sid
+     * @return mixed
+     */
+    public function isDeposit($uid,$sid){
+        return shops_auction::where(['uid'=>$uid,'sid'=>$sid])->count();
+    }
+
+    /**
+     *
+     * 押金的缴纳 判断不能多缴纳与少缴纳
+     * @param $uid 用户id
+     * @param $sid 商品id
+     * @param $deposit 押金
+     * @return array
+     */
+    public function payDeposit($uid,$sid,$deposit){
+         $shop=DB::table('admin_shops')->where('id',$sid)->first();
+        if ($shop->deposit==$deposit){
+             $deposit=shops_auction::insert(['sid'=>$sid,'uid'=>$uid,'money'=>0,'isdeposit'=>1]);
+             if ($deposit == true){
+                 return $data=[
+                     'type'=>1,
+                     'data'=>'缴纳成功，请愉快购物'
+                 ];
+             }else{
+                 return $data=[
+                     'type'=>0,
+                     'data'=>'网络错误，请稍后重试'
+                 ];
+             }
+
+        }else{
+            return $data=[
+                'type'=>0,
+                'data'=>'请缴纳正确的押金'
+            ];
+        }
+
+    }
+
+    /**
+     * 拍卖加钱
+     * 商品id
+     * 价格
+     * 用户id
+     */
+    public function payMoney($sid,$money,$uid){
+        $shop=DB::table('admin_shops')->where('id',$sid)->first();
+        $maxmoney= shops_auction::where('sid',$sid)->max('money');
+        if ($money<$maxmoney+($shop->minmoney)){
+            return $data=[
+                'type'=>0,
+                'data'=>'请输入正确的价格！'
+            ];
+        }else{
+            $updata=shops_auction::where(['sid'=>$sid,'uid'=>$uid])->update(['money'=>$money]);
+            if ($updata){
+                return $data=[
+                    'type'=>1,
+                    'data'=>'竞价成功！'
+                ];
+            }else{
+                return $data=[
+                    'type'=>0,
+                    'data'=>'网络错误，请稍后再试！'
+                ];
+            }
+
+        }
+    }
+}
